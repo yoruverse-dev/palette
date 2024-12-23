@@ -4,7 +4,7 @@ import { paletteColors } from './config'
 export class Palette {
     #colors: Record<string, Shades>
     public keys: string[]
-    public version = '0.0.3'
+    public version = '0.0.4'
 
     constructor(colors: PaletteColors = paletteColors) {
         this.#colors = this.#prettify(colors)

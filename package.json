@@ -1,6 +1,6 @@
 {
   "name": "@yoruverse-js/palette",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "module": "index.ts",
   "repository": {
     "type": "git",
@@ -9,6 +9,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "license": "MIT",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
