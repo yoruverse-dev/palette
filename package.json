@@ -1,19 +1,11 @@
 {
   "name": "palette",
-  "module": "src/index.ts",
+  "module": "index.ts",
+  "type": "module",
   "devDependencies": {
-    "@eslint/js": "^9.17.0",
-    "@types/bun": "latest",
-    "eslint": "^9.17.0",
-    "globals": "^15.13.0",
-    "typescript-eslint": "^8.18.1"
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
-  },
-  "scripts": {
-    "lint": "eslint .",
-    "build": "bun build ./index.ts --outdir ./dist && bun lint --fix"
-  },
-  "type": "module"
+  }
 }
