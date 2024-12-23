@@ -1,6 +1,11 @@
-import type { PaletteConfig } from "./types";
+import type { PaletteColors } from "../types";
 
-export const defaultConfig: PaletteConfig = {
+export const paletteColors: PaletteColors = {
+    base: {
+        white: '#FFF',
+        black: '#000',
+        transparent: [255, 255, 255, 255]
+    },
     grayLight: {
         "25": "#FDFDFD",
         "50": "#FAFAFA",

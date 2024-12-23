@@ -1,15 +1,19 @@
-export type RGBColor = [number, number, number, number | undefined]
-export type HexColor = `#${string}`
-interface Shades {
-    [key: number]: RGBColor | HexColor
+export type RequiredShades =
+    | 'grayLight'
+    | 'grayDark'
+    | 'brand'
+    | 'error'
+    | 'success'
+    | 'warning'
+    | 'base'
+
+export type HexColor = `#${string}`;
+export type RgbColor = [number, number, number] | [number, number, number, number];
+
+export type Shades<T extends string = string> = {
+    [shade in T]: HexColor | RgbColor;
 }
-export interface RequiredShades {
-    grayLight: Shades
-    grayDark: Shades
-    brand: Shades
-    error: Shades
-    warning: Shades
-    success: Shades
+
+export interface PaletteColors extends Record<RequiredShades, Shades | RgbColor | HexColor> {
+    [key: string]: Shades | RgbColor | HexColor;
 }
-export type PaletteConfig = RequiredShades & Partial<Record<string, Shades>>
-export type Themes = PaletteConfig
