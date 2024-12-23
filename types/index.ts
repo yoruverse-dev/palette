@@ -10,8 +10,8 @@ export type RequiredShades =
 export type HexColor = `#${string}`;
 export type RgbColor = [number, number, number] | [number, number, number, number];
 
-export type Shades<T extends string = string> = {
-    [shade in T]: HexColor | RgbColor;
+export type Shades<K extends string = string> = {
+    [shade in K]: HexColor | RgbColor;
 }
 
 export interface PaletteColors extends Record<RequiredShades, Shades | RgbColor | HexColor> {

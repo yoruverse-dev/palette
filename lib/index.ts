@@ -2,13 +2,13 @@ import type { PaletteColors, HexColor, RgbColor, Shades } from '../types'
 import { paletteColors } from './config'
 
 export class Palette {
-    public colors: PaletteColors
+    #colors: Record<string, Shades>
     public keys: string[]
     public version = '0.0.3'
 
     constructor(colors: PaletteColors = paletteColors) {
-        this.colors = this.#prettify(colors)
-        this.keys = Object.keys(this.colors)
+        this.#colors = this.#prettify(colors)
+        this.keys = Object.keys(this.#colors)
     }
 
     public isHexColor(color: unknown): color is HexColor {
@@ -53,7 +53,15 @@ export class Palette {
         return `#${[r, g, b].map((value) => value.toString(16).padStart(2, '0')).join('')}${alpha}`
     }
 
-    #prettify(colors: PaletteColors) {
+    public rgbToString(rgb: RgbColor): string {
+        if (!this.isRbgColor(rgb)) {
+            throw new Error('Invalid RGB color')
+        }
+        const [r, g, b, a] = rgb
+        return a !== undefined ? `rgba(${r}, ${g}, ${b}, ${a / 255})` : `rgb(${r}, ${g}, ${b})`
+    }
+
+    #prettify(colors: PaletteColors): Record<string, Shades> {
         const kebabCase = (str: string) => str.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)
 
         return Object.entries(colors).reduce((acc, [key, value]) => {
@@ -73,6 +81,49 @@ export class Palette {
                     }
                 }, {} as Shades),
             }
-        }, {} as PaletteColors)
+        }, {})
+    };
+
+    public colors(options?: { format: 'hex' | 'rgb' }): Record<string, Shades> {
+        if (!options) return this.#colors
+        if (options.format !== 'hex' && options.format !== 'rgb') return this.#colors
+
+        if (options.format === 'hex') {
+            return Object.entries(this.#colors).reduce((acc, [key, value]) => {
+                return {
+                    ...acc,
+                    [key]: Object.entries(value).reduce((acc, [shade, color]) => {
+                        if (this.isHexColor(color)) {
+                            return {
+                                ...acc,
+                                [shade]: color,
+                            }
+                        }
+                        return {
+                            ...acc,
+                            [shade]: this.rgbToHex(color),
+                        }
+                    }, {} as Shades),
+                }
+            }, {})
+        }
+
+        return Object.entries(this.#colors).reduce((acc, [key, value]) => {
+            return {
+                ...acc,
+                [key]: Object.entries(value).reduce((acc, [shade, color]) => {
+                    if (this.isRbgColor(color)) {
+                        return {
+                            ...acc,
+                            [shade]: color,
+                        }
+                    }
+                    return {
+                        ...acc,
+                        [shade]: this.hexToRgb(color),
+                    }
+                }, {} as Shades),
+            }
+        }, {})
     }
 }
