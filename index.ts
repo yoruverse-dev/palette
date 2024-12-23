@@ -71,7 +71,3 @@ export class Palette {
         }, {} as Themes)
     }
 }
-
-const palette = new Palette()
-console.log(palette.version)
-console.log(palette.themes)
