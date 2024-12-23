@@ -1,6 +1,14 @@
 {
-  "name": "palette",
+  "name": "@yoruverse-js/palette",
+  "version": "0.0.1",
   "module": "index.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoruverse-dev/palette.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest"
