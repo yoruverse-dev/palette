@@ -1,31 +1,40 @@
-# Yoruverse official Palette
-Hey there! This is the official Yoruverse palette. You can copy, modify and use it for your own projects, don't need to credit us, but we would appreciate it if you do.
+# Yoruverse Official Palette
+
+Welcome! This is the official Yoruverse palette. You can copy, modify, and use it for your own projects without needing to credit us, but we'd greatly appreciate it if you do. ❤️
 
 ## Installation
-You can download the palette from the npm registry by running the following 
-command:
+To install the palette, run the following command from the npm registry:
+
 ```bash
 npm install @yoruverse-js/palette
 ```
 
 ## Usage
 
-### Choosing your palette
-> [!TIP]
-> We recommend using the predefined palette since it's already tested. If you want to add or modify colors you will always be able to by using the `setColor` method.  
-In order to use a blank palette:
+### Choosing Your Palette
+
+> **Tip**: We recommend using the predefined palette, as it's already tested. If you want to add or modify colors, you can always do so using the `setColor` method.  
+
+#### Blank Palette
+To start with an empty palette:
+
 ```ts
 import { Palette } from '@yoruverse-js/palette';
 
 const palette = new Palette();
 ```
-And in order to use our palette:
+
+#### Predefined Palette
+To use our predefined palette:
+
 ```ts
 import { palette } from '@yoruverse-js/palette';
 ```
-### Adding or editting colors
+
+### Adding or Editing Colors
+You can nest colors to any depth, but the value must be either a valid hex or RGB color. For stricter typing, you can import the `HexColor` and `RGBColor` types from `@yoruverse-js/palette`.
+
 ```ts
-// You can choose any depth but the value should be either hex or rgb color
 palette.setColor({
     base: {
         white: '#fff',
@@ -35,32 +44,53 @@ palette.setColor({
     blue: '#...'
 });
 ```
-### Remove colors
+
+### Removing Colors
+To remove a color and all its nested children:
+
 ```ts
 palette.removeColor('base');
 ```
-### Get color
+
+### Getting a Specific Color
+To retrieve a color (including all its children):
+
 ```ts
 palette.getColor('base');
 ```
 
-## Utilities
-### Transformers
+### Getting All Colors
+You can retrieve all colors in either a flattened or prettified (nested) format:
+
 ```ts
-import { hexToRGB, hexToRGB, rgbToString } from '@yoruverse-js/palette';
+const pretty = palette.colors();
+const flattered = palette.colors(true);
 ```
+
+## Utilities
+
+### Color Transformers
+Transform one color format to another:
+
+```ts
+import { hexToRGB, rgbToHex, rgbToString } from '@yoruverse-js/palette';
+```
+
 ### Validators
+Validate whether a color is a properly formatted hex or RGB value:
+
 ```ts
 import { isHexColor, isRGBColor } from '@yoruverse-js/palette';
 ```
 
 ## Contributors
 <a href="https://github.com/jotis1" target="_blank">
-    <img src="https://github.com/jotis1.png" width="30" height="30" alt="Jotis1" style="border-radius: 15px"  />
+    <img src="https://github.com/jotis1.png" width="30" height="30" alt="Jotis1" style="border-radius: 15px" />
 </a>
 <a href="https://github.com/8l4ckr0s3" target="_blank">
-    <img src="https://github.com/8l4ckr0s3.png" width="30" height="30" alt="Jotis1" style="border-radius: 15px"  />
+    <img src="https://github.com/8l4ckr0s3.png" width="30" height="30" alt="8l4ckr0s3" style="border-radius: 15px" />
 </a>
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](./LICENSE.md) file for details.
+This project is licensed under the MIT License. See the [LICENSE.md](./LICENSE.md) file for details.
+

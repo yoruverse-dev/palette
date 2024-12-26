@@ -8,7 +8,14 @@ export type Colors = {
     [key: string]: HexColor | RGBColor | Colors
 }
 
-export interface ReadableColors {
+type ReadableColors = {
+    [key: string]: {
+        hex: HexColor,
+        rgb: RGBColor
+    } | ReadableColors
+}
+
+export interface FlatteredColors {
     [key: string]: {
         hex: HexColor,
         rgb: RGBColor
@@ -43,27 +50,54 @@ export class Palette {
         return version;
     }
 
-    get colors(): Readonly<ReadableColors> {
-        const flattenedColors = this.#flattenObject(this.#colors);
-        return Object.keys(flattenedColors).reduce((acc: ReadableColors, key) => {
-            const color = flattenedColors[key];
-            if (isHexColor(color)) {
-                acc[key] = {
-                    hex: color,
-                    rgb: hexToRGB(color)
-                };
-            }
 
-            if (isRGBColor(color)) {
-                acc[key] = {
-                    hex: rgbToHex(color),
-                    rgb: color
-                };
-            }
+    colors(flat?: boolean): Readonly<ReadableColors | FlatteredColors> {
+        const toFlat = (obj: Colors): FlatteredColors => {
+            const flattenedColors = this.#flattenObject(obj);
+            return Object.keys(flattenedColors).reduce((acc: FlatteredColors, key) => {
+                const color = flattenedColors[key];
+                if (isHexColor(color)) {
+                    acc[key] = {
+                        hex: color,
+                        rgb: hexToRGB(color)
+                    };
+                }
 
-            return acc;
-        }, {});
+                if (isRGBColor(color)) {
+                    acc[key] = {
+                        hex: rgbToHex(color),
+                        rgb: color
+                    };
+                }
+
+                return acc;
+            }, {});
+        };
+        const toPretty = (obj: Colors): ReadableColors => {
+            return Object.keys(obj).reduce((acc: ReadableColors, key: string) => {
+                const value = obj[key];
+
+                if (typeof value === 'string' && isHexColor(value)) {
+                    acc[key] = {
+                        hex: value,
+                        rgb: hexToRGB(value)
+                    };
+                } else if (Array.isArray(value) && isRGBColor(value)) {
+                    acc[key] = {
+                        hex: rgbToHex(value),
+                        rgb: value
+                    };
+                } else if (typeof value === 'object' && value !== null) {
+                    acc[key] = toPretty(value as Colors);
+                }
+
+                return acc;
+            }, {});
+        };
+
+        return flat ? toFlat(this.#colors) : toPretty(this.#colors);
     }
+
 
     #flattenObject(obj: unknown, parentKey: string = '', separator: string = '-'): Record<string, string> {
         if (typeof obj !== 'object' || obj === null) {
