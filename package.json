@@ -1,0 +1,33 @@
+{
+  "author": {
+    "name": "8l4ckr0s3",
+    "url": "https://github.com/8l4ckr0s3"
+  },
+  "name": "palette",
+  "version": "0.1.0",
+  "module": "index.ts",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoruverse-dev/palette.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/bun": "latest",
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "typescript-eslint": "^8.18.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
