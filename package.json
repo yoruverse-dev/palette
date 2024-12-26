@@ -3,10 +3,11 @@
     "name": "8l4ckr0s3",
     "url": "https://github.com/8l4ckr0s3"
   },
-  "name": "palette",
+  "name": "@yoruverse-js/palette",
   "version": "0.1.0",
   "module": "index.ts",
   "type": "module",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yoruverse-dev/palette.git"
@@ -14,7 +15,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "license": "MIT",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
