@@ -4,7 +4,8 @@
     "url": "https://github.com/8l4ckr0s3"
   },
   "name": "@yoruverse-js/palette",
-  "version": "0.1.0",
+  "description": "A simple color palette for Yoruverse projects.",
+  "version": "0.1.1",
   "module": "index.ts",
   "type": "module",
   "license": "MIT",
