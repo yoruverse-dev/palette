@@ -1,4 +1,4 @@
 export const version = {
-    number: '0.1.2',
-    description: 'New vault utilities, check the README for more information'
+    number: '0.1.3',
+    description: 'Now you can force the alpha channel in rgbToString method'
 };

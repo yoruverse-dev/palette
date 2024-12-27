@@ -32,8 +32,14 @@ export function rgbToHex(color: RGBColor): HexColor {
     return `#${color.map(c => c.toString(16).padStart(2, '0')).join('')}`;
 }
 
-export function rgbToString(color: RGBColor): string {
+export function rgbToString(color: RGBColor, forceAlpha?: boolean): string {
     if (!isRGBColor(color)) throw new Error('Invalid RGB color');
-    return color.length === 3 ? `rgb(${color.join(', ')})`
+
+    if (forceAlpha) color.length === 3 ? color.push(1) : null;
+
+    if (color.length === 4) color[3] = parseFloat((color[3] / 255).toFixed(2));
+
+    return color.length === 3
+        ? `rgb(${color.join(', ')})`
         : `rgba(${color.join(', ')})`;
 }
