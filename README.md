@@ -63,8 +63,15 @@ palette.getColor('base');
 You can retrieve all colors in either a flattened or prettified (nested) format:
 
 ```ts
-const pretty = palette.colors();
-const flattered = palette.colors(true);
+// Multiple depth object
+const vault = palette.colors.vault() // --> With both values (hex and rgb)
+const vaultHex = palette.colors.vaultHex() // --> Transform all to hex values
+const vaultRGB = palette.colors.vaultRGB() // --> Transform all to rgb values
+
+// Single depth object
+const vaultFlat = palette.colors.vaultFlat() // --> With both values (hex and rgb)
+const vaultFlatRGB = palette.colors.vaultFlatRGB() // --> Transform all to rgb values
+const vaultFlatRGB = palette.colors.vaultFlatRGB() // --> Transform all to rgb values
 ```
 
 ## Utilities

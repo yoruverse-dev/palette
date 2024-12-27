@@ -4,22 +4,21 @@ import { hexToRGB, isHexColor, isRGBColor, rgbToHex } from '../utils/functions';
 export type HexColor = `#${string}`
 export type RGBColor<T = number> = [T, T, T] | [T, T, T, T]
 
-export type Colors = {
+type Colors = {
     [key: string]: HexColor | RGBColor | Colors
 }
 
-type ReadableColors = {
-    [key: string]: {
-        hex: HexColor,
-        rgb: RGBColor
-    } | ReadableColors
+type HexAndRGB = {
+    hex: HexColor,
+    rgb: RGBColor
 }
 
-export interface FlatteredColors {
-    [key: string]: {
-        hex: HexColor,
-        rgb: RGBColor
-    }
+type Vault<T> = {
+    [key: string]: T | Vault<T>
+}
+
+export type FlatteredVault<T> = {
+    [key: string]: T
 }
 
 export class Palette {
@@ -50,11 +49,61 @@ export class Palette {
         return version;
     }
 
+    get colors() {
+        const vault = (obj: Colors) => {
+            return Object.keys(obj).reduce((acc, key: string) => {
+                const value = obj[key];
 
-    colors(flat?: boolean): Readonly<ReadableColors | FlatteredColors> {
-        const toFlat = (obj: Colors): FlatteredColors => {
+                if (typeof value === 'string' && isHexColor(value)) {
+                    acc[key] = {
+                        hex: value,
+                        rgb: hexToRGB(value)
+                    };
+                } else if (Array.isArray(value) && isRGBColor(value)) {
+                    acc[key] = {
+                        hex: rgbToHex(value),
+                        rgb: value
+                    };
+                } else if (typeof value === 'object' && value !== null) {
+                    acc[key] = vault(value as Colors);
+                }
+
+                return acc;
+            }, {} as Vault<HexAndRGB>);
+        };
+        const vaultHex = (obj: Colors) => {
+            return Object.keys(obj).reduce((acc, key: string) => {
+                const value = obj[key];
+
+                if (typeof value === 'string' && isHexColor(value)) {
+                    acc[key] = value;
+                } else if (Array.isArray(value) && isRGBColor(value)) {
+                    acc[key] = rgbToHex(value);
+                } else if (typeof value === 'object' && value !== null) {
+                    acc[key] = vaultHex(value as Colors);
+                }
+
+                return acc;
+            }, {} as Vault<HexColor>);
+        };
+        const vaultRGB = (obj: Colors) => {
+            return Object.keys(obj).reduce((acc, key: string) => {
+                const value = obj[key];
+
+                if (typeof value === 'string' && isHexColor(value)) {
+                    acc[key] = hexToRGB(value);
+                } else if (Array.isArray(value) && isRGBColor(value)) {
+                    acc[key] = value;
+                } else if (typeof value === 'object' && value !== null) {
+                    acc[key] = vaultRGB(value as Colors);
+                }
+
+                return acc;
+            }, {} as Vault<RGBColor>);
+        };
+        const vaultFlat = (obj: Colors) => {
             const flattenedColors = this.#flattenObject(obj);
-            return Object.keys(flattenedColors).reduce((acc: FlatteredColors, key) => {
+            return Object.keys(flattenedColors).reduce((acc, key) => {
                 const color = flattenedColors[key];
                 if (isHexColor(color)) {
                     acc[key] = {
@@ -71,33 +120,45 @@ export class Palette {
                 }
 
                 return acc;
-            }, {});
+            }, {} as FlatteredVault<HexAndRGB>);
         };
-        const toPretty = (obj: Colors): ReadableColors => {
-            return Object.keys(obj).reduce((acc: ReadableColors, key: string) => {
-                const value = obj[key];
-
-                if (typeof value === 'string' && isHexColor(value)) {
-                    acc[key] = {
-                        hex: value,
-                        rgb: hexToRGB(value)
-                    };
-                } else if (Array.isArray(value) && isRGBColor(value)) {
-                    acc[key] = {
-                        hex: rgbToHex(value),
-                        rgb: value
-                    };
-                } else if (typeof value === 'object' && value !== null) {
-                    acc[key] = toPretty(value as Colors);
+        const vaultFlatHex = (obj: Colors) => {
+            const flattenedColors = this.#flattenObject(obj);
+            return Object.keys(flattenedColors).reduce((acc, key) => {
+                const color = flattenedColors[key];
+                if (isHexColor(color)) {
+                    acc[key] = color;
+                } else if (isRGBColor(color)) {
+                    acc[key] = rgbToHex(color);
                 }
 
                 return acc;
-            }, {});
+            }, {} as FlatteredVault<HexColor>);
+        };
+        const vaultFlatRGB = (obj: Colors) => {
+            const flattenedColors = this.#flattenObject(obj);
+            return Object.keys(flattenedColors).reduce((acc, key) => {
+                const color = flattenedColors[key];
+                if (isRGBColor(color)) {
+                    acc[key] = color;
+                } else if (isHexColor(color)) {
+                    acc[key] = hexToRGB(color);
+                }
+
+                return acc;
+            }, {} as FlatteredVault<RGBColor>);
         };
 
-        return flat ? toFlat(this.#colors) : toPretty(this.#colors);
-    }
+        return {
+            vault: () => vault(this.#colors),
+            vaultHex: () => vaultHex(this.#colors),
+            vaultRGB: () => vaultRGB(this.#colors),
+            vaultFlat: () => vaultFlat(this.#colors),
+            vaultFlatHex: () => vaultFlatHex(this.#colors),
+            vaultFlatRGB: () => vaultFlatRGB(this.#colors)
+        };
 
+    }
 
     #flattenObject(obj: unknown, parentKey: string = '', separator: string = '-'): Record<string, string> {
         if (typeof obj !== 'object' || obj === null) {

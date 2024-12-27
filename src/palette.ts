@@ -435,7 +435,4 @@ palette.setColor({
     },
 });
 
-console.dir(palette.colors(), { depth: null });
-// console.log(palette.flatteredColors);
-
 export { palette };
