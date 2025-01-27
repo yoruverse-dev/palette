@@ -2,7 +2,7 @@ import type { AccentValue, AccentName, Shades, HexColor, RgbColor, Colors } from
 import { writeFileSync } from 'fs';
 export class Palette {
 
-    public static readonly version = '0.2.1'
+    public static readonly version = '0.2.2'
 
     public static isHexColor(color: unknown): color is HexColor {
         const regex = /^([0-9A-Fa-f]{3}){1,2}$/
@@ -63,7 +63,7 @@ export class Palette {
     public static createThemeCssFile() {
         const css = '@theme {\n'
         const variables = Object.entries(Palette.colors).map(([name, accent]) => {
-            const shades = Object.entries(accent).map(([shade, { hex }]) => `  --${name}-${shade}: ${hex};`)
+            const shades = Object.entries(accent).map(([shade, { hex }]) => `  --color-${name}-${shade}: ${hex};`)
             return shades.join('\n')
         }).join('\n\n')
 
@@ -80,3 +80,5 @@ export type {
     Shades,
     Colors
 }
+
+Palette.createThemeCssFile()
